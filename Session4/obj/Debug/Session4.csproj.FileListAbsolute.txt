@@ -1,0 +1,13 @@
+C:\Users\abc\source\repos\Session4\Session4\bin\Debug\Session4.exe.config
+C:\Users\abc\source\repos\Session4\Session4\bin\Debug\Session4.exe
+C:\Users\abc\source\repos\Session4\Session4\bin\Debug\Session4.pdb
+C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.csprojAssemblyReference.cache
+C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.frmIventory.resources
+C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.Properties.Resources.resources
+C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.csproj.GenerateResource.cache
+C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.csproj.CoreCompileInputs.cache
+C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.exe
+C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.pdb
+C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.frmPurchase.resources
+C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.frmIventoryReport.resources
+C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.frmWarehouse.resources
