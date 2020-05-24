@@ -11,3 +11,4 @@ C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.pdb
 C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.frmPurchase.resources
 C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.frmIventoryReport.resources
 C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.frmWarehouse.resources
+C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.frmIventoryRepair.resources
