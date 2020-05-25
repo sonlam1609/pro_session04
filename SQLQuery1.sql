@@ -81,14 +81,34 @@ select * from WareHouses;
 
 select * from OrderItems;
 select * from Orders;
-select Parts.PartName, TranSactionTypes.TranSactionName,  Orders.OrderDate, OrderItems.Amount, Orders.SourceWareHouse, Orders.Destination, OrderItems.ID
+
+select Parts.PartName, TranSactionTypes.TranSactionName,  Orders.OrderDate, OrderItems.Amount, WareHouses.WareHouseName as 'Source' , Destination.Destination, OrderItems.ID as 'OrderItemId', Orders.ID as 'OrdersId'
 from Orders 
 inner join WareHouses on Orders.SourceWareHouse = WareHouses.ID
+inner join Destination on Orders.Destination = Destination.ID
 inner join OrderItems on Orders.ID = OrderItems.OrderID
 inner join Parts on OrderItems.PartID = Parts.ID
-inner join TranSactionTypes on TranSactionTypes.ID = Orders.TranSactionID
+inner join TranSactionTypes on TranSactionTypes.ID = Orders.TranSactionID;
+
+drop table Source
+drop table Destination
+
+select Warehouses.ID, Warehouses.WareHouseName as 'Destination' into Destination
+from Warehouses
+
+select * from Destination
 
 select PARTS.ID
 from PARTS
 where PARTS.PartName = 'Part3';
 
+select WareHouses.ID
+from WareHouses
+where WareHouses.WareHouseName = 'Mikuta'
+
+
+Update Orders
+set SourceWareHouse = 2, Destination = 4, TranSactionID = 2
+where Orders.ID = 1
+
+select * from WareHouses

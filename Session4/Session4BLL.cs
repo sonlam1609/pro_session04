@@ -38,5 +38,10 @@ namespace Session4
         {
             return dalSS4.getIdByPartName(partname);
         }
+
+        public bool update(int PartID, int Amount, int OrderItemsID)
+        {
+            return dalSS4.update(PartID, Amount, OrderItemsID);
+        }
     }
 }
