@@ -43,6 +43,8 @@
             this.Destination = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.Delete = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.OrderItemId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OrdersId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -55,7 +57,7 @@
             this.inventoryReportToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1200, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(748, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -87,6 +89,7 @@
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AllowUserToOrderColumns = true;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.PartName,
@@ -96,12 +99,14 @@
             this.Source,
             this.Destination,
             this.Edit,
-            this.Delete});
-            this.dataGridView1.Location = new System.Drawing.Point(8, 30);
+            this.Delete,
+            this.OrderItemId,
+            this.OrdersId});
+            this.dataGridView1.Location = new System.Drawing.Point(8, 27);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.dataGridView1.Size = new System.Drawing.Size(1180, 390);
+            this.dataGridView1.Size = new System.Drawing.Size(726, 390);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
@@ -133,15 +138,15 @@
             // 
             // Source
             // 
+            this.Source.DataPropertyName = "Source";
             this.Source.HeaderText = "Source";
             this.Source.Name = "Source";
-            this.Source.Width = 120;
             // 
             // Destination
             // 
+            this.Destination.DataPropertyName = "Destination";
             this.Destination.HeaderText = "Destination";
             this.Destination.Name = "Destination";
-            this.Destination.Width = 130;
             // 
             // Edit
             // 
@@ -160,11 +165,26 @@
             this.Delete.UseColumnTextForButtonValue = true;
             this.Delete.Width = 50;
             // 
+            // OrderItemId
+            // 
+            this.OrderItemId.DataPropertyName = "OrderItemId";
+            this.OrderItemId.HeaderText = "OrderItemId";
+            this.OrderItemId.Name = "OrderItemId";
+            this.OrderItemId.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.OrderItemId.Visible = false;
+            // 
+            // OrdersId
+            // 
+            this.OrdersId.DataPropertyName = "OrdersId";
+            this.OrdersId.HeaderText = "OrdersId";
+            this.OrdersId.Name = "OrdersId";
+            this.OrdersId.Visible = false;
+            // 
             // frmIventory
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1200, 443);
+            this.ClientSize = new System.Drawing.Size(748, 443);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -195,6 +215,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Destination;
         private System.Windows.Forms.DataGridViewButtonColumn Edit;
         private System.Windows.Forms.DataGridViewButtonColumn Delete;
+        private System.Windows.Forms.DataGridViewTextBoxColumn OrderItemId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn OrdersId;
     }
 }
 

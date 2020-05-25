@@ -15,9 +15,11 @@ namespace Session4
         Session4BLL bllss4;
         public string partName { set; get; }
         public string transactionType { set; get; }
-        public float amount { set; get; }
+        public int amount { set; get; }
         public string source { set; get; }
         public string destination { set; get; }
+        public int orderitemid { set; get; }
+        public int ordersid { set; get; }
 
         public frmIventoryRepair()
         {
@@ -47,7 +49,7 @@ namespace Session4
             addValuecbb5();
             comboBox1.SelectedText = partName;
             comboBox2.SelectedText = transactionType;
-            textBox1.SelectedText = amount.ToString();
+            txtAmount.SelectedText = amount.ToString();
             comboBox4.SelectedText = source;
             comboBox5.SelectedText = destination;
 
@@ -64,17 +66,27 @@ namespace Session4
 
         private void button1_Click(object sender, EventArgs e)
         {
-            DataTable dt = bllss4.getIdByPartName(comboBox1.SelectedItem.ToString());
-
-            try
+            DataTable dt = new DataTable();
+            if (comboBox1.SelectedItem != null)
             {
-                MessageBox.Show(dt.Rows[0][0].ToString());
+                dt = bllss4.getIdByPartName(comboBox1.SelectedItem.ToString());
             }
-            catch (Exception)
+            else
             {
-
-                MessageBox.Show("Pls select combobox");
+                dt = bllss4.getIdByPartName(partName);
             }
+            
+            int PartID = int.Parse(dt.Rows[0][0].ToString());
+            int amountr = int.Parse(txtAmount.Text);
+            MessageBox.Show(PartID.ToString());
+            MessageBox.Show(orderitemid.ToString());
+            MessageBox.Show(txtAmount.Text);
+
+            if (!bllss4.update(PartID, amountr, orderitemid))
+            {
+                MessageBox.Show("Cap nhat that bai");
+            }
+            
             
         }
 
@@ -84,7 +96,6 @@ namespace Session4
             comboBox5.ResetText();
             addValuecbb5();
             int selected1 = comboBox4.SelectedIndex;
-
             if (selected1 >= 0)
             {
                 comboBox5.Items.RemoveAt(selected1);

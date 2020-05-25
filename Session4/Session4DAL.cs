@@ -17,14 +17,87 @@ namespace Session4
         {
             dc = new DataConnection();
         }
+
+        public bool update(int PartID, int Amount, int OrderItemsID)
+        {
+            string sql = "UPDATE OrderItems" +
+                " SET PartID = @PartID, Amount = @Amount" +
+                " WHERE OrderItems.ID = @OrderItemsID; ";
+            SqlConnection con = dc.getConnect();
+            try
+            {
+                cmd = new SqlCommand(sql, con);
+                con.Open();
+                cmd.Parameters.AddWithValue("PartID", PartID);
+                cmd.Parameters.AddWithValue("Amount", Amount);
+                cmd.Parameters.AddWithValue("OrderItemsID", OrderItemsID);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+            return true;  
+        }
+
+        public bool update2(int SourceWareHouse, int Destination, int TranSactionID, int OrdersId)
+        {
+            string sql = "Update Orders " +
+                "set SourceWareHouse = 2, Destination = 4, TranSactionID = 2 " +
+                "where Orders.ID = 1";
+            SqlConnection con = dc.getConnect();
+            try
+            {
+                con.Open();
+                cmd = new SqlCommand(sql, con);
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+            return true;
+        }
+
+        
+        public DataTable getIdByPartName(string partname)
+        {
+            string sql = "select PARTS.ID from PARTS where PARTS.PartName = @partname; ";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("partname", partname);
+            DataTable dt = new DataTable();
+            SqlDataReader dr = cmd.ExecuteReader();
+            dt.Load(dr);
+            con.Close();
+            return dt;
+        }
+
+        public DataTable getIdByWareHouse(string warehousename)
+        {
+            string sql = "select WareHouses.ID from WareHouses where WareHouses.WareHouseName = @warehousename";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("warehousename", warehousename);
+            DataTable dt = new DataTable();
+            SqlDataReader dr = cmd.ExecuteReader();
+            dt.Load(dr);
+            con.Close();
+            return dt;
+        }
         public DataTable getAllOrders()
         {
-            string sql = " select Parts.PartName, TranSactionTypes.TranSactionName,  Orders.OrderDate, OrderItems.Amount, Orders.SourceWareHouse, Orders.Destination, OrderItems.ID " +
-                "from Orders" +
+            string sql = "select Parts.PartName, TranSactionTypes.TranSactionName,  Orders.OrderDate, OrderItems.Amount, WareHouses.WareHouseName as 'Source' , Destination.Destination, OrderItems.ID as 'OrderItemId', Orders.ID as 'OrdersId'" +
+                " from Orders" +
                 " inner join WareHouses on Orders.SourceWareHouse = WareHouses.ID" +
+                " inner join Destination on Orders.Destination = Destination.ID" +
                 " inner join OrderItems on Orders.ID = OrderItems.OrderID" +
-                " inner join Parts on OrderItems.PartID = Parts.ID inner " +
-                "join TranSactionTypes on TranSactionTypes.ID = Orders.TranSactionID ";
+                " inner join Parts on OrderItems.PartID = Parts.ID" +
+                " inner join TranSactionTypes on TranSactionTypes.ID = Orders.TranSactionID";
             SqlConnection con = dc.getConnect();
             da = new SqlDataAdapter(sql, con);
             con.Open();
@@ -69,20 +142,7 @@ namespace Session4
             return dt;
         }
 
-        public DataTable getIdByPartName(string partname)
-        {
-            string sql = "select PARTS.ID from PARTS where PARTS.PartName = @partname; ";
-            SqlConnection con = dc.getConnect();
-            cmd = new SqlCommand(sql, con);
-            con.Open();
-            cmd.Parameters.AddWithValue("partname", partname);
-            DataTable dt = new DataTable();
-
-            SqlDataReader dr = cmd.ExecuteReader();
-            dt.Load(dr);
-            con.Close();
-            return dt;
-        }
+        
 
     }
 }
