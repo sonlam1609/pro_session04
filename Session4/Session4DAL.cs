@@ -18,6 +18,133 @@ namespace Session4
             dc = new DataConnection();
         }
 
+        public DataTable getBatchByPartAndDes(int Des, int PartID)
+        {
+            string sql = "select BathNumber " +
+                "from OrderItems inner join PARTS on OrderItems.PartID = PARTS.ID" +
+                " inner join Orders on Orders.ID = OrderItems.OrderID " +
+                "where BatchNumberHasRequired = 'true' and Orders.Destination = @Des and PartID = @PartID";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("Des", Des);
+            cmd.Parameters.AddWithValue("PartID", PartID);
+            DataTable dt = new DataTable();
+            SqlDataReader dr = cmd.ExecuteReader();
+            dt.Load(dr);
+            con.Close();
+            return dt;
+        }
+
+        public DataTable getPartBySource(int Des)
+        {
+            string sql = "select DISTINCT PartID, PartName " +
+                "from OrderItems inner join PARTS on OrderItems.PartID = PARTS.ID" +
+                " inner join Orders on Orders.ID = OrderItems.OrderID " +
+                "where BatchNumberHasRequired = 'true' and Orders.Destination = @Des";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("Des", Des);
+            DataTable dt = new DataTable();
+            SqlDataReader dr = cmd.ExecuteReader();
+            dt.Load(dr);
+            con.Close();
+            return dt;
+        }
+        
+        public DataTable getIDOrders()
+        {
+            string sql = "SELECT MAX(ID)  FROM Orders";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            DataTable dt = new DataTable();
+            SqlDataReader dr = cmd.ExecuteReader();
+            dt.Load(dr);
+            con.Close();
+            return dt;
+        }
+
+        public void insertIntoOrdersAdj(int TranID, int Source, int Des, string date)
+        {
+            string sql = "insert into Orders (TranSactionID, SourceWareHouse, Destination, OrderDate)" +
+                " values(@TranID,@Source,@Des,@date)";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("TranID", TranID);
+            cmd.Parameters.AddWithValue("Source", Source);
+            cmd.Parameters.AddWithValue("Des", Des);
+            cmd.Parameters.AddWithValue("date", date);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+
+        public void insertIntoOrders(int TranID, int SupID, int Source, int Des, string date)
+        {
+            string sql = "insert into Orders values (@TranID, @SupID, @Source, @Des, @date)";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("TranID", TranID);
+            cmd.Parameters.AddWithValue("SupID", SupID);
+            cmd.Parameters.AddWithValue("Source", Source);
+            cmd.Parameters.AddWithValue("Des", Des);
+            cmd.Parameters.AddWithValue("date", date);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+
+        public void insertIntoOrderItems(int OrderID, int PartID, string BathNumber, int Amount)
+        {
+            string sql = "insert into OrderItems values (@OrderID, @PartID, @BathNumber, @Amount)";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("OrderID", OrderID);
+            cmd.Parameters.AddWithValue("PartID", PartID);
+            cmd.Parameters.AddWithValue("BathNumber", BathNumber);
+            cmd.Parameters.AddWithValue("Amount", Amount);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+
+        public DataTable getBatchRequired(int ID)
+        {
+            string sql = "select BatchNumberHasRequired from PARTS where ID = @ID";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("ID", ID);
+            DataTable dt = new DataTable();
+            SqlDataReader dr = cmd.ExecuteReader();
+            dt.Load(dr);
+            con.Close();
+            return dt;
+        }
+
+
+        public bool delete(int OrderItemsID)
+        {
+            string sql = "delete OrderItems where OrderItems.ID = @OrderItemsID";
+            SqlConnection con = dc.getConnect();
+            try
+            {
+                cmd = new SqlCommand(sql, con);
+                con.Open();
+                cmd.Parameters.AddWithValue("OrderItemsID", OrderItemsID);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+            return true;
+        }
+
         public bool update(int PartID, int Amount, int OrderItemsID)
         {
             string sql = "UPDATE OrderItems" +
@@ -45,17 +172,22 @@ namespace Session4
         public bool update2(int SourceWareHouse, int Destination, int TranSactionID, int OrdersId)
         {
             string sql = "Update Orders " +
-                "set SourceWareHouse = 2, Destination = 4, TranSactionID = 2 " +
-                "where Orders.ID = 1";
+                "set SourceWareHouse = @SourceWareHouse, Destination = @Destination, TranSactionID = @TranSactionID " +
+                "where Orders.ID = @OrdersId";
             SqlConnection con = dc.getConnect();
             try
             {
-                con.Open();
                 cmd = new SqlCommand(sql, con);
+                con.Open();
+                cmd.Parameters.AddWithValue("SourceWareHouse", SourceWareHouse);
+                cmd.Parameters.AddWithValue("Destination", Destination);
+                cmd.Parameters.AddWithValue("TranSactionID", TranSactionID);
+                cmd.Parameters.AddWithValue("OrdersId", OrdersId);
+                cmd.ExecuteNonQuery();
+                con.Close();
             }
             catch (Exception)
             {
-
                 return false;
             }
             return true;
@@ -89,12 +221,26 @@ namespace Session4
             con.Close();
             return dt;
         }
+
+        public DataTable getIdByTranSactionName(string trantactionname)
+        {
+            string sql = "select TranSactionTypes.ID from TranSactionTypes where TranSactionName = @trantactionname";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("trantactionname", trantactionname);
+            DataTable dt = new DataTable();
+            SqlDataReader dr = cmd.ExecuteReader();
+            dt.Load(dr);
+            con.Close();
+            return dt;
+        }
         public DataTable getAllOrders()
         {
-            string sql = "select Parts.PartName, TranSactionTypes.TranSactionName,  Orders.OrderDate, OrderItems.Amount, WareHouses.WareHouseName as 'Source' , Destination.Destination, OrderItems.ID as 'OrderItemId', Orders.ID as 'OrdersId'" +
+            string sql = "select Parts.PartName, TranSactionTypes.TranSactionName,  Orders.OrderDate, OrderItems.Amount, e1.WareHouseName as 'Source' , e2.WareHouseName as 'Destination', OrderItems.ID as 'OrderItemId', Orders.ID as 'OrdersId'" +
                 " from Orders" +
-                " inner join WareHouses on Orders.SourceWareHouse = WareHouses.ID" +
-                " inner join Destination on Orders.Destination = Destination.ID" +
+                " inner join WareHouses e1 on Orders.SourceWareHouse = e1.ID" +
+                " inner join WareHouses e2 on Orders.Destination = e2.ID" +
                 " inner join OrderItems on Orders.ID = OrderItems.OrderID" +
                 " inner join Parts on OrderItems.PartID = Parts.ID" +
                 " inner join TranSactionTypes on TranSactionTypes.ID = Orders.TranSactionID";
@@ -105,6 +251,18 @@ namespace Session4
             da.Fill(dt);
             con.Close();
             return dt;
+        }
+        public DataTable getAllSuppliers()
+        {
+            string sql = "select * from Suppliers";
+            SqlConnection con = dc.getConnect();
+            da = new SqlDataAdapter(sql, con);
+            con.Open();
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            con.Close();
+            return dt;
+
         }
         public DataTable getAllWareHouses()
         {
@@ -142,7 +300,31 @@ namespace Session4
             return dt;
         }
 
-        
+        public DataTable getMiniAmount(string PartName)
+        {
+            string sql = "select MinimumAmount from PARTS where PartName = @PartName";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("PartName", PartName);
+            DataTable dt = new DataTable();
+            SqlDataReader dr = cmd.ExecuteReader();
+            dt.Load(dr);
+            con.Close();
+            return dt;
+        }
+
+        public void updateParts(int PartID, int amount)
+        {
+            string sql = "update PARTS set MinimumAmount = MinimumAmount - @amount where ID = @PartID";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("PartID", PartID);
+            cmd.Parameters.AddWithValue("amount", amount);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
 
     }
 }

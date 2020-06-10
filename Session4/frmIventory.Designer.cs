@@ -33,6 +33,7 @@
             this.purchaseOrderManagementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.warehouseManagementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.inventoryReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.PartName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -54,10 +55,11 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.purchaseOrderManagementToolStripMenuItem,
             this.warehouseManagementToolStripMenuItem,
-            this.inventoryReportToolStripMenuItem});
+            this.inventoryReportToolStripMenuItem,
+            this.loadToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(748, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(768, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -82,6 +84,13 @@
             this.inventoryReportToolStripMenuItem.Text = "Inventory Report";
             this.inventoryReportToolStripMenuItem.Click += new System.EventHandler(this.inventoryReportToolStripMenuItem_Click);
             // 
+            // loadToolStripMenuItem
+            // 
+            this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
+            this.loadToolStripMenuItem.Text = "Load";
+            this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
+            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Name = "contextMenuStrip1";
@@ -105,10 +114,10 @@
             this.dataGridView1.Location = new System.Drawing.Point(8, 27);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.dataGridView1.Size = new System.Drawing.Size(726, 390);
+            this.dataGridView1.Size = new System.Drawing.Size(748, 390);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.dataGridView1.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_ColumnHeaderMouseClick);
             // 
             // PartName
             // 
@@ -184,7 +193,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(748, 443);
+            this.ClientSize = new System.Drawing.Size(768, 443);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -207,6 +216,7 @@
         private System.Windows.Forms.ToolStripMenuItem inventoryReportToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn PartName;
         private System.Windows.Forms.DataGridViewTextBoxColumn TransactionName;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
