@@ -13,7 +13,6 @@ CREATE TABLE PARTS(
 CREATE TABLE Suppliers(
 	ID INT IDENTITY PRIMARY KEY,
 	SupplyName NVARCHAR(100),
-
 );
 
 CREATE TABLE WareHouses(
@@ -42,12 +41,37 @@ CREATE TABLE  OrderItems(
 	BathNumber nvarchar(50),
 	Amount int
 )
+select * from PARTS
+SELECT MAX(ID)  FROM Orders
+delete Orders where ID = 21
+select * from Orders
+select * from OrderItems
+select BathNumber from OrderItems where BathNumber = 'sdf'
 
-INSERT INTO PARTS VALUES('Part1','ok',1,100),
-												('Part2','ok',0,150),
-												('Part3','ok',1,160),
-												('Part4','ok',1,100),
-												('Part5','ok',1,50);
+
+delete Orders where ID = 24
+
+select MinimumAmount from PARTS where PartName = 'Part1'
+
+update PARTS set MinimumAmount = MinimumAmount + 100 where PartName = 'Part2'
+
+select * from PARTS
+select DISTINCT PartID, PartName
+from OrderItems inner join PARTS on OrderItems.PartID = PARTS.ID
+     inner join Orders on Orders.ID = OrderItems.OrderID
+where BatchNumberHasRequired = 'true' and Orders.Destination = 3
+
+select BathNumber
+from OrderItems inner join PARTS on OrderItems.PartID = PARTS.ID
+     inner join Orders on Orders.ID = OrderItems.OrderID
+where BatchNumberHasRequired = 'true' and Orders.Destination = 3 and PartID = 3
+
+
+INSERT INTO PARTS VALUES('Part1','2020/02/02',1,100),
+												('Part2','2020/02/02',0,150),
+												('Part3','2020/02/02',1,160),
+												('Part4','2020/02/02',1,100),
+												('Part5','2020/02/02',1,50);
 
 INSERT INTO Suppliers VALUES ('SamSung'),
 														 ('Son'),
@@ -69,7 +93,7 @@ INSERT INTO Orders VALUES (1,1,2,3,'2019/2/4'),
 													(3,1,1,2,'2017/12/3'),
 													(1,2,2,3,'2020/4/3');
 
-INSERT INTO OrderItems VALUES (1,1,200,400),
+INSERT INTO OrderItems VALUES (8,3,300,400),
 															(1,2,20,40),
 															(2,1,50,50),
 															(3,4,200,400),
@@ -82,10 +106,13 @@ select * from WareHouses;
 select * from OrderItems;
 select * from Orders;
 
-select Parts.PartName, TranSactionTypes.TranSactionName,  Orders.OrderDate, OrderItems.Amount, WareHouses.WareHouseName as 'Source' , Destination.Destination, OrderItems.ID as 'OrderItemId', Orders.ID as 'OrdersId'
+insert into Orders (TranSactionID, SourceWareHouse, Destination, OrderDate) values(2,4,3,'2020-06-07')
+
+
+select Parts.PartName, TranSactionTypes.TranSactionName,  Orders.OrderDate, OrderItems.Amount, e1.WareHouseName as 'Source' , e2.WareHouseName as 'Destination', OrderItems.ID as 'OrderItemId', Orders.ID as 'OrdersId'
 from Orders 
-inner join WareHouses on Orders.SourceWareHouse = WareHouses.ID
-inner join Destination on Orders.Destination = Destination.ID
+inner join WareHouses e1 on Orders.SourceWareHouse = e1.ID
+inner join WareHouses e2 on Orders.Destination = e2.ID
 inner join OrderItems on Orders.ID = OrderItems.OrderID
 inner join Parts on OrderItems.PartID = Parts.ID
 inner join TranSactionTypes on TranSactionTypes.ID = Orders.TranSactionID;
@@ -106,9 +133,27 @@ select WareHouses.ID
 from WareHouses
 where WareHouses.WareHouseName = 'Mikuta'
 
+select TranSactionTypes.ID
+from TranSactionTypes
+where TranSactionName = 'Plane'
 
 Update Orders
 set SourceWareHouse = 2, Destination = 4, TranSactionID = 2
-where Orders.ID = 1
+where Orders.ID = 4
 
+
+select * from OrderItems
+INSERT INTO OrderItems VALUES (2,3,300,400)
+
+delete OrderItems
+where OrderItems.ID = 7
+
+INSERT INTO Orders VALUES (2,3,2,3,'2020/10/6')
 select * from WareHouses
+
+select BatchNumberHasRequired
+from PARTS
+where ID = 2
+
+select * from Orders
+delete Orders where ID = 11

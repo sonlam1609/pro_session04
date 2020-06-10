@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 namespace Session4
 {
+
     public partial class frmIventory : Form
     {
         Session4BLL bllss4;
@@ -18,35 +19,41 @@ namespace Session4
             InitializeComponent();
             bllss4 = new Session4BLL();
         }
-
+        DataTable dtAll = new DataTable();
         public void frmIventory_Load(object sender, EventArgs e)
         {
-            DataTable dt = bllss4.getAllOrders();
-            dataGridView1.DataSource = dt;
+            dtAll = bllss4.getAllOrders();
+            dataGridView1.DataSource = dtAll;
+            DataView view = dtAll.DefaultView;
+            view.Sort = "OrderDate ASC, TranSactionName ASC";
 
             DataTable dt1 = bllss4.getAllWareHouses();
+            AmountColor();
+        }
 
+        public void AmountColor()
+        {
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
 
-                if ((String)row.Cells["TransactionName"].Value == "Plane")
+                if ((String)row.Cells["TransactionName"].Value == "Purchase Order")
                 {
                     row.Cells["Amount"].Style.BackColor = Color.LightGreen;
                 }
-
             }
         }
 
+
         private void purchaseOrderManagementToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            frmPurchase frmPurchase = new frmPurchase();
-            frmPurchase.Show();
+            frmPurchaseOrder frmPurchaseOrder = new frmPurchaseOrder();
+            frmPurchaseOrder.Show();
         }
 
         private void warehouseManagementToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            frmWarehouse frmWarehouse = new frmWarehouse();
-            frmWarehouse.Show();
+            Warehouse_Management wm = new Warehouse_Management();
+            wm.Show();
         }
 
         
@@ -74,9 +81,48 @@ namespace Session4
             }
             else if (dataGridView1.Columns[e.ColumnIndex].Name == "Delete")
             {
-                MessageBox.Show("Delete");
+                DialogResult dialogResult = MessageBox.Show("Bạn muốn xóa?", "Cảnh báo", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    if (!bllss4.delete(int.Parse(dataGridView1.Rows[e.RowIndex].Cells["OrderItemId"].FormattedValue.ToString())))
+                    {
+                        MessageBox.Show("Xoa that bai");
+                    }
+                }
+                
             }
         }
 
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmIventory_Load(sender,e);
+        }
+
+        private int Order = -1;
+
+        private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            //ListSortDirection sortDirection;
+
+            if (dataGridView1.SortedColumn.Name == "PartName")
+            {
+                
+                if (this.Order == -1)
+                {
+                    DataView view = dtAll.DefaultView;
+                    view.Sort = "PartName DESC";
+                    this.Order = 1;
+                    AmountColor();
+                }
+                else
+                {
+                    DataView view = dtAll.DefaultView;
+                    view.Sort = "PartName ASC";
+                    this.Order = -1;
+                    AmountColor();
+                }
+            }
+
+        }
     }
 }

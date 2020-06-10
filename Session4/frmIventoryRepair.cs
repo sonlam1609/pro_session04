@@ -75,19 +75,56 @@ namespace Session4
             {
                 dt = bllss4.getIdByPartName(partName);
             }
-            
-            int PartID = int.Parse(dt.Rows[0][0].ToString());
-            int amountr = int.Parse(txtAmount.Text);
-            MessageBox.Show(PartID.ToString());
-            MessageBox.Show(orderitemid.ToString());
-            MessageBox.Show(txtAmount.Text);
 
-            if (!bllss4.update(PartID, amountr, orderitemid))
+            DataTable dtSource = new DataTable();
+            if (comboBox4.SelectedItem != null)
+            {
+                dtSource = bllss4.getIdByWareHouse(comboBox4.SelectedItem.ToString());
+            }
+            else
+            {
+                dtSource = bllss4.getIdByWareHouse(source);
+            }
+
+            DataTable dtDes = new DataTable();
+            if(comboBox5.SelectedItem !=null)
+            {
+                dtDes = bllss4.getIdByWareHouse(comboBox5.SelectedItem.ToString());
+            }
+            else
+            {
+                dtDes = bllss4.getIdByWareHouse(destination);
+            }
+
+            DataTable dtTran = new DataTable();
+            if (comboBox2.SelectedItem != null)
+            {
+                dtTran = bllss4.getIdByTranSactionName(comboBox2.SelectedItem.ToString());
+            }
+            else
+            {
+                dtTran = bllss4.getIdByTranSactionName(transactionType);
+            }
+
+            int PartID = int.Parse(dt.Rows[0][0].ToString());
+            int SourceID = int.Parse(dtSource.Rows[0][0].ToString());
+            int DesId = int.Parse(dtDes.Rows[0][0].ToString());
+            int TranId = int.Parse(dtTran.Rows[0][0].ToString());
+            int amountr = int.Parse(txtAmount.Text);
+
+            bllss4.update(PartID, amountr, orderitemid);
+            bllss4.update2(SourceID, DesId, TranId, ordersid);
+            bool check1 = bllss4.update(PartID, amountr, orderitemid);
+            bool check2 = bllss4.update2(SourceID, DesId, TranId, ordersid);
+            if (check1 == true && check2 ==true)
+            {
+                MessageBox.Show("Cap nhat thanh cong");
+            }
+            else
             {
                 MessageBox.Show("Cap nhat that bai");
             }
-            
-            
+
         }
 
         private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
