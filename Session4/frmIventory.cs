@@ -89,7 +89,7 @@ namespace Session4
                         MessageBox.Show("Xoa that bai");
                     }
                 }
-                
+                frmIventory_Load(sender, e);
             }
         }
 
@@ -99,11 +99,14 @@ namespace Session4
         }
 
         private int Order = -1;
+        private int TranType = -1;
+        private int DateType = -1;
+        private int AmountType = -1;
+        private int SourceType = -1;
+        private int DesType = -1;
 
         private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            //ListSortDirection sortDirection;
-
             if (dataGridView1.SortedColumn.Name == "PartName")
             {
                 
@@ -119,6 +122,101 @@ namespace Session4
                     DataView view = dtAll.DefaultView;
                     view.Sort = "PartName ASC";
                     this.Order = -1;
+                    AmountColor();
+                }
+            }
+
+            if (dataGridView1.SortedColumn.Name == "TransactionName")
+            {
+
+                if (this.TranType == -1)
+                {
+                    DataView view = dtAll.DefaultView;
+                    view.Sort = "TranSactionName DESC";
+                    this.TranType = 1;
+                    AmountColor();
+                }
+                else
+                {
+                    DataView view = dtAll.DefaultView;
+                    view.Sort = "TranSactionName ASC";
+                    this.TranType = -1;
+                    AmountColor();
+                }
+            }
+
+            if (dataGridView1.SortedColumn.Name == "Date")
+            {
+
+                if (this.DateType == -1)
+                {
+                    DataView view = dtAll.DefaultView;
+                    view.Sort = "OrderDate DESC, TranSactionName ASC";
+                    this.DateType = 1;
+                    AmountColor();
+                }
+                else
+                {
+                    DataView view = dtAll.DefaultView;
+                    view.Sort = "OrderDate ASC, TranSactionName ASC";
+                    this.DateType = -1;
+                    AmountColor();
+                }
+            }
+
+            if (dataGridView1.SortedColumn.Name == "Amount")
+            {
+
+                if (this.AmountType == -1)
+                {
+                    DataView view = dtAll.DefaultView;
+                    view.Sort = "Amount DESC";
+                    this.AmountType = 1;
+                    AmountColor();
+                }
+                else
+                {
+                    DataView view = dtAll.DefaultView;
+                    view.Sort = "Amount ASC";
+                    this.AmountType = -1;
+                    AmountColor();
+                }
+            }
+
+            if (dataGridView1.SortedColumn.Name == "Source")
+            {
+
+                if (this.SourceType == -1)
+                {
+                    DataView view = dtAll.DefaultView;
+                    view.Sort = "Source DESC";
+                    this.SourceType = 1;
+                    AmountColor();
+                }
+                else
+                {
+                    DataView view = dtAll.DefaultView;
+                    view.Sort = "Source ASC";
+                    this.SourceType = -1;
+                    AmountColor();
+                }
+            }
+
+            if (dataGridView1.SortedColumn.Name == "Destination")
+            {
+
+                if (this.DesType == -1)
+                {
+                    DataView view = dtAll.DefaultView;
+                    view.Sort = "Destination DESC";
+                    this.DesType = 1;
+                    AmountColor();
+                }
+                else
+                {
+                    DataView view = dtAll.DefaultView;
+                    view.Sort = "Destination ASC";
+                    this.DesType = -1;
                     AmountColor();
                 }
             }

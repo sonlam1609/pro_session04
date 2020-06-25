@@ -112,18 +112,26 @@ namespace Session4
             int TranId = int.Parse(dtTran.Rows[0][0].ToString());
             int amountr = int.Parse(txtAmount.Text);
 
-            bllss4.update(PartID, amountr, orderitemid);
-            bllss4.update2(SourceID, DesId, TranId, ordersid);
-            bool check1 = bllss4.update(PartID, amountr, orderitemid);
-            bool check2 = bllss4.update2(SourceID, DesId, TranId, ordersid);
-            if (check1 == true && check2 ==true)
+            
+
+            if (comboBox1.Text.Trim() != "" && comboBox2.Text.Trim() != "" && comboBox4.Text.Trim() != ""&& comboBox5.Text.Trim() != "" && txtAmount.Text.Trim() != "")
             {
-                MessageBox.Show("Cap nhat thanh cong");
+                bool check1 = bllss4.update(PartID, amountr, orderitemid);
+                bool check2 = bllss4.update2(SourceID, DesId, TranId, ordersid);
+                if (check1 == true && check2 == true)
+                {
+                    MessageBox.Show("Cap nhat thanh cong");
+                }
+                else
+                {
+                    MessageBox.Show("Cap nhat that bai");
+                }
             }
             else
             {
-                MessageBox.Show("Cap nhat that bai");
+                MessageBox.Show("Bạn cần điền đủ thông tin");
             }
+            
 
         }
 

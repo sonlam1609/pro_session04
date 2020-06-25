@@ -36,37 +36,74 @@ namespace Session4
         private void button1_Click(object sender, EventArgs e)
         {
             bool check2 = true;
-            int a = 0;
+            float a = 0;
             if (textBox2.Text.Trim() == "")
             {
-
-                MessageBox.Show("Bạn cần điền Amount");
                 check2 = false;
-
             }
-
             if (textBox2.Text.Trim() != "")
             {
                 try
                 {
-                    a = int.Parse(textBox2.Text);
+                    a = float.Parse(textBox2.Text);
                     if (a < 0)
                     {
-                        MessageBox.Show("Amount là số dương");
                         check2 = false;
                     }
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Amount là chữ số");
                     check2 = false;
                 }
             }
 
 
-            if (check2 == true)
+            if (check2 == true && comboBox3.Text.Trim() !="" && comboBox4.Text.Trim() != "")
             {
-                dataGridView1.Rows.Add(comboBox3.Text,comboBox4.Text ,textBox2.Text);
+                float amount = float.Parse(textBox2.Text);
+                float sum = amount;
+
+                DataTable dt = bllss4.getAmountByBatch(int.Parse(comboBox1.SelectedValue.ToString()), comboBox3.Text);
+                float mini = float.Parse(dt.Rows[0][0].ToString());
+
+                foreach (DataGridViewRow row1 in dataGridView1.Rows)
+                {
+                    if ((String)row1.Cells["BatchNumber"].Value == comboBox4.Text)
+                    {
+                        sum += float.Parse(row1.Cells["Amount"].Value.ToString());
+                    }
+                }
+                int i = 1;
+                foreach (DataGridViewRow row in dataGridView1.Rows)
+                {
+                    if (sum <= mini)
+                    {
+                        int rowCount = dataGridView1.Rows.Count - 1;
+                        if ((String)row.Cells["PartName"].Value == comboBox3.Text && (String)row.Cells["BatchNumber"].Value == comboBox4.Text)
+                        {
+                            dataGridView1.Rows.Add(comboBox3.Text, comboBox4.Text, sum);
+                            dataGridView1.Rows.RemoveAt(row.Index);
+                            break;
+                        }
+
+                        if (i > rowCount)
+                        {
+                            dataGridView1.Rows.Add(comboBox3.Text, comboBox4.Text, textBox2.Text);
+                            break;
+                        }
+                        i++;
+                    }
+                    else
+                    {
+                        sum = sum - amount;
+                        MessageBox.Show("Amount hiện tại còn: " + (mini - sum));
+                        break;
+                    }
+                }          
+            }
+            else
+            {
+                MessageBox.Show("Dữ liệu trống hoặc không chính xác");
             }
         }
 
@@ -101,9 +138,9 @@ namespace Session4
                         DataTable dt1 = bllss4.getIdByPartName(dataGridView1.Rows[i].Cells["PartName"].Value.ToString());
                         int PartID = int.Parse(dt1.Rows[0][0].ToString());
                         string BathNumber = dataGridView1.Rows[i].Cells["BatchNumber"].Value.ToString();
-                        int Amount = int.Parse(dataGridView1.Rows[i].Cells["Amount"].Value.ToString());
+                        float Amount = float.Parse(dataGridView1.Rows[i].Cells["Amount"].Value.ToString());
                         bllss4.insertIntoOrderItems(OrderId, PartID, BathNumber, Amount);
-                        
+                        //bllss4.updateOrderItemsByTranAndBatch(Amount, BathNumber, int.Parse(comboBox1.SelectedValue.ToString()));
                     }
                     MessageBox.Show("Thêm dữ liệu thành công");
                 }
@@ -151,6 +188,11 @@ namespace Session4
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
             dataGridView1.Rows.Clear();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

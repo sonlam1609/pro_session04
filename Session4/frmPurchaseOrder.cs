@@ -37,6 +37,8 @@ namespace Session4
             comboBox3.DataSource = dt2;
             comboBox3.DisplayMember = "PartName";
             comboBox3.ValueMember = "ID";
+
+            textBox1.Enabled = false;
         }
 
         bool batch;
@@ -49,10 +51,13 @@ namespace Session4
                 if (batch == true)
                 {
                     textBox1.Text = "True";
+                    textBox1.Enabled = true;
+
                 }
                 else
                 {
                     textBox1.Text = "";
+                    textBox1.Enabled = false;
                 }
             }
 
@@ -61,13 +66,16 @@ namespace Session4
         {
             bool check1 = true;
             bool check2 = true;
-
-            int a = 0;
+            bool check3 = true;
+            float a = 0;
+            if (!batch)
+            {
+                check1 = true;
+            }
             if (batch && textBox1.Text.Trim() == "" || textBox1.Text.Trim() == "True")
             {
                 MessageBox.Show("Bạn cần điền Batch Name");
                 check1 = false;
-
             }
             if (batch && textBox2.Text.Trim() == "")
             {
@@ -81,7 +89,7 @@ namespace Session4
             {
                 try
                 {
-                    a = int.Parse(textBox2.Text);
+                    a = float.Parse(textBox2.Text);
                     if (a < 0)
                     {
                         MessageBox.Show("Amount là số dương");
@@ -95,39 +103,48 @@ namespace Session4
                 }
             }
 
-            if (!batch)
+            if (batch && textBox1.Text.Trim() != "")
             {
-                MessageBox.Show("Kiểm tra Part Name");
+                DataTable dt = bllss4.getBatchNumber(textBox1.Text);
+                int numberOfRecords = dt.Rows.Count;
+                if (numberOfRecords != 0)
+                {
+                    MessageBox.Show("Batch number trùng vui lòng nhập lại");
+                    check3 = false;
+                }
+                else
+                {
+                    check3 = true;
+                }
+
             }
-            if (check1 == true && check2 == true && batch == true)
+
+            if (check1 == true && check2 == true && check3 == true)
             {
                 string part = comboBox3.Text;
                 string batch = textBox1.Text;
-                int amount = int.Parse(textBox2.Text);
-                int sum = amount;
+                float amount = float.Parse(textBox2.Text);
+                float sum = amount;
 
                 DataTable dt = bllss4.getMiniAmount(part);
-                int mini = int.Parse(dt.Rows[0][0].ToString());
+                float mini = int.Parse(dt.Rows[0][0].ToString());
 
                 foreach (DataGridViewRow row1 in dataGridView1.Rows)
                 {
                     if ((String)row1.Cells["PartName"].Value == part)
                     {
-                        sum += int.Parse(row1.Cells["Amount"].Value.ToString());
+                        sum += float.Parse(row1.Cells["Amount"].Value.ToString());
                     }
                 }
                 int i = 1;
                 foreach (DataGridViewRow row in dataGridView1.Rows)
                 {
-                    
                     if (sum <= mini)
                     {
                         int rowCount = dataGridView1.Rows.Count - 1;
                         if ((String)row.Cells["PartName"].Value == part && (String)row.Cells["BatchNumber"].Value == batch)
                         {
-                            int total = int.Parse(row.Cells["Amount"].Value.ToString());
-                            total += amount;
-                            dataGridView1.Rows.Add(comboBox3.Text, textBox1.Text, total);
+                            dataGridView1.Rows.Add(comboBox3.Text, textBox1.Text, sum);
                             dataGridView1.Rows.RemoveAt(row.Index);
                             break;
                         }
@@ -142,7 +159,7 @@ namespace Session4
                     else
                     {
                         sum = sum - amount;
-                        MessageBox.Show("MiniAmount Hiện tại: " + (mini-sum));
+                        MessageBox.Show("MiniAmount hiện tại còn: " + (mini-sum));
                         break;
                     }
                     
@@ -170,8 +187,24 @@ namespace Session4
             {
                 Source = 4;
             }
-            //Them du lieu
-                       
+
+            if (comboBox1.SelectedValue.ToString() == "1" && comboBox1.SelectedValue.ToString() == Source.ToString())
+            {
+                Source = 2;
+            }
+            if (comboBox1.SelectedValue.ToString() == "2" && comboBox1.SelectedValue.ToString() == Source.ToString())
+            {
+                Source = 3;
+            }
+            if (comboBox1.SelectedValue.ToString() == "3" && comboBox1.SelectedValue.ToString() == Source.ToString())
+            {
+                Source = 4;
+            }
+            if (comboBox1.SelectedValue.ToString() == "4" && comboBox1.SelectedValue.ToString() == Source.ToString())
+            {
+                Source = 1;
+            }
+
             if (dataGridView1.Rows.Count >= 2)
             {
                 bllss4.insertIntoOrders(TranID, int.Parse(comboBox1.SelectedValue.ToString()), 
@@ -183,7 +216,7 @@ namespace Session4
                     DataTable dt1 = bllss4.getIdByPartName(dataGridView1.Rows[i].Cells["PartName"].Value.ToString());
                     int PartID = int.Parse(dt1.Rows[0][0].ToString());
                     string BathNumber = dataGridView1.Rows[i].Cells["BatchNumber"].Value.ToString();
-                    int Amount = int.Parse(dataGridView1.Rows[i].Cells["Amount"].Value.ToString());
+                    float Amount = float.Parse(dataGridView1.Rows[i].Cells["Amount"].Value.ToString());
                     bllss4.insertIntoOrderItems(OrderId, PartID, BathNumber, Amount);
                     bllss4.updateParts(PartID,Amount);
                 }
@@ -221,6 +254,11 @@ namespace Session4
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
             dataGridView1.Rows.Clear();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
