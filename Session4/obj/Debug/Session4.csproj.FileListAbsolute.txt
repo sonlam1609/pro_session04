@@ -12,3 +12,4 @@ C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.frmIventoryRepair
 C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.frmPurchaseOrder.resources
 C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.Warehouse_Management.resources
 C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.frmIventory.resources
+C:\Users\abc\source\repos\Session4\Session4\obj\Debug\Session4.frmViewBatch.resources

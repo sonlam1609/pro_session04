@@ -49,7 +49,7 @@ namespace Session4
             return dalSS4.getIdByTranSactionName(trantactionname);
         }
 
-        public bool update(int PartID, int Amount, int OrderItemsID)
+        public bool update(int PartID, float Amount, int OrderItemsID)
         {
             return dalSS4.update(PartID, Amount, OrderItemsID);
         }
@@ -77,7 +77,7 @@ namespace Session4
             dalSS4.insertIntoOrders(TranID, SupID, Source, Des, date);
         }
 
-        public void insertIntoOrderItems(int OrderID, int PartID, string BathNumber, int Amount)
+        public void insertIntoOrderItems(int OrderID, int PartID, string BathNumber, float Amount)
         {
             dalSS4.insertIntoOrderItems(OrderID, PartID, BathNumber, Amount);
         }
@@ -107,9 +107,44 @@ namespace Session4
             return dalSS4.getMiniAmount(PartName);
         }
 
-        public void updateParts(int PartID, int amount)
+        public void updateParts(int PartID, float amount)
         {
             dalSS4.updateParts(PartID, amount);
+        }
+
+        public DataTable getAmountByBatch(int Des, string PartName)
+        {
+            return dalSS4.getAmountByBatch(Des, PartName);
+        }
+
+        /*public void updateOrderItemsByTranAndBatch(float Amount, string BathNumber, int SourceWareHouse)
+        {
+            dalSS4.updateOrderItemsByTranAndBatch(Amount, BathNumber, SourceWareHouse);
+        }*/
+
+        public DataTable getBatchNumber(string BathNumber)
+        {
+            return dalSS4.getBatchNumber(BathNumber);
+        }
+
+        public DataTable getIventoryReport(int ID)
+        {
+            return dalSS4.getIventoryReport(ID);
+        }
+
+        public DataTable getReportNull(int ID)
+        {
+            return dalSS4.getReportNull(ID);
+        }
+
+        public DataTable getReportNotNull(int ID)
+        {
+            return dalSS4.getReportNotNull(ID);
+        }
+
+        public DataTable getDetailsBatch(int ID, string PartName)
+        {
+            return dalSS4.getDetailsBatch(ID, PartName);
         }
     }
 }

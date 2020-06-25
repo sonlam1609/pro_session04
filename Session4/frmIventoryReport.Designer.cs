@@ -36,6 +36,10 @@
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.label2 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.PartName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CurrentStock = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ReceivedStock = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Action = new System.Windows.Forms.DataGridViewButtonColumn();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -56,6 +60,7 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(288, 21);
             this.comboBox1.TabIndex = 1;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // groupBox1
             // 
@@ -79,6 +84,7 @@
             this.radioButton3.TabStop = true;
             this.radioButton3.Text = "Out of Stock";
             this.radioButton3.UseVisualStyleBackColor = true;
+            this.radioButton3.CheckedChanged += new System.EventHandler(this.radioButton3_CheckedChanged);
             // 
             // radioButton2
             // 
@@ -90,6 +96,7 @@
             this.radioButton2.TabStop = true;
             this.radioButton2.Text = "Received Stock";
             this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
             // 
             // radioButton1
             // 
@@ -101,6 +108,7 @@
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "Current Stock";
             this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
             // 
             // label2
             // 
@@ -114,10 +122,46 @@
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.PartName,
+            this.CurrentStock,
+            this.ReceivedStock,
+            this.Action});
             this.dataGridView1.Location = new System.Drawing.Point(17, 107);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(684, 174);
+            this.dataGridView1.RowHeadersVisible = false;
+            this.dataGridView1.Size = new System.Drawing.Size(694, 174);
             this.dataGridView1.TabIndex = 3;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            // 
+            // PartName
+            // 
+            this.PartName.DataPropertyName = "PartName";
+            this.PartName.HeaderText = "PartName";
+            this.PartName.Name = "PartName";
+            this.PartName.Width = 180;
+            // 
+            // CurrentStock
+            // 
+            this.CurrentStock.DataPropertyName = "Con";
+            this.CurrentStock.HeaderText = "Current Stock";
+            this.CurrentStock.Name = "CurrentStock";
+            this.CurrentStock.Width = 180;
+            // 
+            // ReceivedStock
+            // 
+            this.ReceivedStock.DataPropertyName = "Mua";
+            this.ReceivedStock.HeaderText = "Received Stock";
+            this.ReceivedStock.Name = "ReceivedStock";
+            this.ReceivedStock.Width = 180;
+            // 
+            // Action
+            // 
+            this.Action.HeaderText = "Action";
+            this.Action.Name = "Action";
+            this.Action.Text = "View Batch Numbers";
+            this.Action.UseColumnTextForButtonValue = true;
+            this.Action.Width = 150;
             // 
             // frmIventoryReport
             // 
@@ -131,6 +175,7 @@
             this.Controls.Add(this.label1);
             this.Name = "frmIventoryReport";
             this.Text = "frmIventoryReport";
+            this.Load += new System.EventHandler(this.frmIventoryReport_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -149,5 +194,9 @@
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn PartName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CurrentStock;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ReceivedStock;
+        private System.Windows.Forms.DataGridViewButtonColumn Action;
     }
 }

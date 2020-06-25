@@ -20,10 +20,9 @@ namespace Session4
 
         public DataTable getBatchByPartAndDes(int Des, int PartID)
         {
-            string sql = "select BathNumber " +
-                "from OrderItems inner join PARTS on OrderItems.PartID = PARTS.ID" +
-                " inner join Orders on Orders.ID = OrderItems.OrderID " +
-                "where BatchNumberHasRequired = 'true' and Orders.Destination = @Des and PartID = @PartID";
+            string sql = "select BathNumber from OrderItems inner join PARTS on OrderItems.PartID = PARTS.ID" +
+                " inner join Orders on Orders.ID = OrderItems.OrderID" +
+                "  where Destination = @Des and PartID = @PartID and BatchNumberHasRequired = 'true' group by BathNumber";
             SqlConnection con = dc.getConnect();
             cmd = new SqlCommand(sql, con);
             con.Open();
@@ -96,7 +95,7 @@ namespace Session4
             con.Close();
         }
 
-        public void insertIntoOrderItems(int OrderID, int PartID, string BathNumber, int Amount)
+        public void insertIntoOrderItems(int OrderID, int PartID, string BathNumber, float Amount)
         {
             string sql = "insert into OrderItems values (@OrderID, @PartID, @BathNumber, @Amount)";
             SqlConnection con = dc.getConnect();
@@ -145,7 +144,7 @@ namespace Session4
             return true;
         }
 
-        public bool update(int PartID, int Amount, int OrderItemsID)
+        public bool update(int PartID, float Amount, int OrderItemsID)
         {
             string sql = "UPDATE OrderItems" +
                 " SET PartID = @PartID, Amount = @Amount" +
@@ -314,7 +313,7 @@ namespace Session4
             return dt;
         }
 
-        public void updateParts(int PartID, int amount)
+        public void updateParts(int PartID, float amount)
         {
             string sql = "update PARTS set MinimumAmount = MinimumAmount - @amount where ID = @PartID";
             SqlConnection con = dc.getConnect();
@@ -326,5 +325,154 @@ namespace Session4
             con.Close();
         }
 
+        public DataTable getAmountByBatch(int Des,string PartName)
+        {
+            string sql = "select t.Mua - ISNULL(h.Ban, 0 ) as 'Con' from (select PARTS.PartName, sum(Amount) as 'Mua' " +
+                "from OrderItems inner join PARTS on OrderItems.PartID = PARTS.ID " +
+                "inner join Orders on Orders.ID = OrderItems.OrderID " +
+                "where Orders.Destination = @Des " +
+                "group by PARTS.PartName) t full join " +
+                "( select PARTS.PartName, sum(Amount) as 'Ban' " +
+                "from OrderItems inner join PARTS on OrderItems.PartID = PARTS.ID " +
+                "inner join Orders on Orders.ID = OrderItems.OrderID " +
+                "where Orders.SourceWareHouse = @Des and Orders.TranSactionID = 2 " +
+                "group by PARTS.PartName) h " +
+                "on t.PartName = h.PartName where t.PartName = @PartName";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("Des", Des);
+            cmd.Parameters.AddWithValue("PartName", PartName);
+            DataTable dt = new DataTable();
+            SqlDataReader dr = cmd.ExecuteReader();
+            dt.Load(dr);
+            con.Close();
+            return dt;
+        }
+
+        /*public void updateOrderItemsByTranAndBatch(float Amount, string BathNumber, int SourceWareHouse)
+        {
+            string sql = "UPDATE OrderItems" +
+                " SET Amount = Amount - @Amount" +
+                " FROM OrderItems" +
+                " inner join Orders on Orders.ID = OrderItems.OrderID" +
+                " WHERE and SourceWareHouse = @Source BathNumber = @BathNumber";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("Amount", Amount);
+            cmd.Parameters.AddWithValue("BathNumber", BathNumber);
+            cmd.Parameters.AddWithValue("SourceWareHouse", SourceWareHouse);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }*/
+
+        public DataTable getBatchNumber(string BathNumber)
+        {
+            string sql = "select BathNumber from OrderItems where BathNumber = @BathNumber";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("BathNumber", BathNumber);
+            DataTable dt = new DataTable();
+            SqlDataReader dr = cmd.ExecuteReader();
+            dt.Load(dr);
+            con.Close();
+            return dt;
+        }
+
+        public DataTable getIventoryReport(int ID)
+        {
+            string sql = "select DISTINCT t.PartName, t.Mua - ISNULL(h.Ban, 0 ) as 'Con', t.Mua from " +
+                "(select PARTS.PartName, sum(Amount) as 'Mua' " +
+                "from OrderItems inner join PARTS on OrderItems.PartID = PARTS.ID " +
+                "inner join Orders on Orders.ID = OrderItems.OrderID " +
+                "where Orders.Destination = @ID " +
+                "group by PARTS.PartName) t full join " +
+                "(select PARTS.PartName, sum(Amount) as 'Ban' " +
+                "from OrderItems inner join PARTS on OrderItems.PartID = PARTS.ID " +
+                "inner join Orders on Orders.ID = OrderItems.OrderID " +
+                "where Orders.SourceWareHouse = @ID and Orders.TranSactionID = 2 " +
+                "group by PARTS.PartName) h on t.PartName = h.PartName ";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("ID", ID);
+            DataTable dt = new DataTable();
+            SqlDataReader dr = cmd.ExecuteReader();
+            dt.Load(dr);
+            con.Close();
+            return dt;
+        }
+
+        public DataTable getReportNull(int ID)
+        {
+            string sql = "select DISTINCT t.PartName, t.Mua - ISNULL(h.Ban, 0 ) as 'Con', t.Mua from " +
+                "(select PARTS.PartName, sum(Amount) as 'Mua' " +
+                "from OrderItems inner join PARTS on OrderItems.PartID = PARTS.ID " +
+                "inner join Orders on Orders.ID = OrderItems.OrderID " +
+                "where Orders.Destination = @ID " +
+                "group by PARTS.PartName) t full join(select PARTS.PartName, sum(Amount) as 'Ban' " +
+                "from OrderItems inner join PARTS on OrderItems.PartID = PARTS.ID " +
+                "inner join Orders on Orders.ID = OrderItems.OrderID " +
+                "where Orders.SourceWareHouse = @ID and Orders.TranSactionID = 2 " +
+                "group by PARTS.PartName) h on t.PartName = h.PartName " +
+                "where t.Mua - ISNULL(h.Ban, 0) = 0";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("ID", ID);
+            DataTable dt = new DataTable();
+            SqlDataReader dr = cmd.ExecuteReader();
+            dt.Load(dr);
+            con.Close();
+            return dt;
+        }
+
+        public DataTable getReportNotNull(int ID)
+        {
+            string sql = "select DISTINCT t.PartName, t.Mua - ISNULL(h.Ban, 0 ) as 'Con', t.Mua from " +
+                "(select PARTS.PartName, sum(Amount) as 'Mua' " +
+                "from OrderItems inner join PARTS on OrderItems.PartID = PARTS.ID " +
+                "inner join Orders on Orders.ID = OrderItems.OrderID " +
+                "where Orders.Destination = @ID " +
+                "group by PARTS.PartName) t full join(select PARTS.PartName, sum(Amount) as 'Ban' " +
+                "from OrderItems inner join PARTS on OrderItems.PartID = PARTS.ID " +
+                "inner join Orders on Orders.ID = OrderItems.OrderID " +
+                "where Orders.SourceWareHouse = @ID and Orders.TranSactionID = 2 " +
+                "group by PARTS.PartName) h on t.PartName = h.PartName " +
+                "where t.Mua - ISNULL(h.Ban, 0) != 0";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("ID", ID);
+            DataTable dt = new DataTable();
+            SqlDataReader dr = cmd.ExecuteReader();
+            dt.Load(dr);
+            con.Close();
+            return dt;
+        }
+
+        public DataTable getDetailsBatch(int ID, string PartName)
+        {
+            string sql = "select BathNumber, Amount, TranSactionTypes.TranSactionName," +
+                " e1.WareHouseName as 'Source' , e2.WareHouseName as 'Destination' from Orders " +
+                "inner join WareHouses e1 on Orders.SourceWareHouse = e1.ID " +
+                "inner join WareHouses e2 on Orders.Destination = e2.ID " +
+                "inner join OrderItems on Orders.ID = OrderItems.OrderID " +
+                "inner join Parts on OrderItems.PartID = Parts.ID " +
+                "inner join TranSactionTypes on TranSactionTypes.ID = Orders.TranSactionID " +
+                "where ((Orders.SourceWareHouse = @ID and Orders.TranSactionID = 2) or Orders.Destination = @ID) and PartName = @PartName";
+            SqlConnection con = dc.getConnect();
+            cmd = new SqlCommand(sql, con);
+            con.Open();
+            cmd.Parameters.AddWithValue("ID", ID);
+            cmd.Parameters.AddWithValue("PartName", PartName);
+            DataTable dt = new DataTable();
+            SqlDataReader dr = cmd.ExecuteReader();
+            dt.Load(dr);
+            con.Close();
+            return dt;
+        }
     }
 }
